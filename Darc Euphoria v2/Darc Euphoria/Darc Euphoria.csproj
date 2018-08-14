@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2C5DC1A1-780B-496B-A911-55306F46E957}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Darc_Euphoria</RootNamespace>
+    <AssemblyName>Darc Euphoria</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>KurumiICON.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.1.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct2D1.4.1.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.1.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.1.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Euphoric\BspParsing\BSPFile.cs" />
+    <Compile Include="Euphoric\BspParsing\BSPFlags.cs" />
+    <Compile Include="Euphoric\BspParsing\ContentsFlag.cs" />
+    <Compile Include="Euphoric\BspParsing\cplane_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dbrushside_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dbrush_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dedge_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dface_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dgamelumpheader_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dgamelump_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dheader_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dleaf_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dnode_t.cs" />
+    <Compile Include="Euphoric\BspParsing\dplane_t.cs" />
+    <Compile Include="Euphoric\BspParsing\eLumpIndex.cs" />
+    <Compile Include="Euphoric\BspParsing\lump_t.cs" />
+    <Compile Include="Euphoric\BspParsing\mvertex_t.cs" />
+    <Compile Include="Euphoric\BspParsing\Polygon.cs" />
+    <Compile Include="Euphoric\BspParsing\snode_t.cs" />
+    <Compile Include="Euphoric\BspParsing\StaticPropDictLump_t.cs" />
+    <Compile Include="Euphoric\BspParsing\StaticPropLeafLump_t.cs" />
+    <Compile Include="Euphoric\BspParsing\StaticPropLump_t.cs" />
+    <Compile Include="Euphoric\BspParsing\StreamExtension.cs" />
+    <Compile Include="Euphoric\BspParsing\texinfo_t.cs" />
+    <Compile Include="Euphoric\BspParsing\VPlane.cs" />
+    <Compile Include="Euphoric\Checks.cs" />
+    <Compile Include="Euphoric\Config\SettingsStruct.cs" />
+    <Compile Include="Euphoric\Controls\EuphoricColorPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Euphoric\Controls\EuphoricColorPicker.Designer.cs">
+      <DependentUpon>EuphoricColorPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Euphoric\Controls\EuphoricGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Euphoric\Controls\EuphoricPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Euphoric\Controls\EuphoricSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Euphoric\Controls\KurumiClock.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Euphoric\Controls\zBitmap.cs" />
+    <Compile Include="Euphoric\Enums.cs" />
+    <Compile Include="Euphoric\Fonts.cs" />
+    <Compile Include="Euphoric\gvar.cs" />
+    <Compile Include="Euphoric\MarshalSize.cs" />
+    <Compile Include="Euphoric\Math.cs" />
+    <Compile Include="Euphoric\Memory.cs" />
+    <Compile Include="Euphoric\NetvarManager.cs" />
+    <Compile Include="Euphoric\Objects\BaseWeapon.cs" />
+    <Compile Include="Euphoric\Objects\Entity.cs" />
+    <Compile Include="Euphoric\Objects\ItemObjects.cs" />
+    <Compile Include="Euphoric\Objects\Local.cs" />
+    <Compile Include="Euphoric\Offsets.cs" />
+    <Compile Include="Euphoric\Sig.cs" />
+    <Compile Include="Euphoric\SizeFormatter.cs" />
+    <Compile Include="Euphoric\Structs.cs" />
+    <Compile Include="Euphoric\WinAPI.cs" />
+    <Compile Include="Hacks\Aimbot.cs" />
+    <Compile Include="Hacks\Bunnyhop.cs" />
+    <Compile Include="Hacks\ChatSpammer.cs" />
+    <Compile Include="Hacks\ClanTagChanger.cs" />
+    <Compile Include="Hacks\EntityList.cs" />
+    <Compile Include="Hacks\ESP.cs" />
+    <Compile Include="Hacks\FakeLag.cs" />
+    <Compile Include="Hacks\Glow.cs" />
+    <Compile Include="Hacks\Injection\ClientCMD.cs" />
+    <Compile Include="Hacks\Injection\CreateThread.cs" />
+    <Compile Include="Hacks\Injection\RankRevealer.cs" />
+    <Compile Include="Hacks\Injection\SetClanTag.cs" />
+    <Compile Include="Hacks\Injection\SetName.cs" />
+    <Compile Include="Hacks\Misc.cs" />
+    <Compile Include="Hacks\RankRevealer.cs" />
+    <Compile Include="Hacks\SkinChanger.cs" />
+    <Compile Include="Hacks\Triggerbot.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="wnd_menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="wnd_menu.Designer.cs">
+      <DependentUpon>wnd_menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="wnd_overlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="wnd_overlay.Designer.cs">
+      <DependentUpon>wnd_overlay.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Euphoric\Controls\EuphoricColorPicker.resx">
+      <DependentUpon>EuphoricColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="wnd_menu.resx">
+      <DependentUpon>wnd_menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="wnd_overlay.resx">
+      <DependentUpon>wnd_overlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Resources\csgo_icons.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="euphoric_UYc_icon.ico" />
+    <Content Include="Kurumi.ico" />
+    <Content Include="KurumiICON.ico" />
+    <None Include="Resources\Clock2.png" />
+    <None Include="Resources\Kurumi.ico" />
+    <None Include="Resources\HourHand.png" />
+    <None Include="Resources\Clock.png" />
+    <None Include="Resources\SecondHand.png" />
+    <None Include="Resources\MinuteHand.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.3.1.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.1.4\build\Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets')" />
+  <Import Project="..\packages\Fody.3.1.4\build\Fody.targets" Condition="Exists('..\packages\Fody.3.1.4\build\Fody.targets')" />
+</Project>
