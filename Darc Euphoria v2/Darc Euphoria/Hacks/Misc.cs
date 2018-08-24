@@ -1,14 +1,7 @@
-﻿using Darc_Euphoria.Euphoric;
+﻿using System.Threading;
+using Darc_Euphoria.Euphoric;
 using Darc_Euphoria.Euphoric.Config;
 using Darc_Euphoria.Euphoric.Objects;
-using Darc_Euphoria.Hacks.Injection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Darc_Euphoria.Hacks
 {
@@ -16,21 +9,15 @@ namespace Darc_Euphoria.Hacks
     {
         public static void Start()
         {
-            gvar.SHUTDOWN++;
-            while (true)
+            while (!gvar.isShuttingDown)
             {
-                if (gvar.isShuttingDown)
-                {
-                    gvar.SHUTDOWN--;
-                    break;
-                }
-
-                Thread.Sleep(1);
+                Thread.Sleep(50);
 
                 if (!Local.InGame)
+                {
+                    Thread.Sleep(1000);
                     continue;
-                else
-                    Thread.Sleep(100);
+                }
 
                 Triggerbot.Start();
                 SkinChanger.Start();
@@ -39,14 +26,13 @@ namespace Darc_Euphoria.Hacks
                 Local.Flash = Settings.userSettings.MiscSettings.FlashAlpha;
                 Local.PostProcessingDisable = Settings.userSettings.MiscSettings.NoPostProcessing;
 
-                ClanTagChanger.Start();         
+                ClanTagChanger.Start();
                 ChatSpammer.Start();
                 Rank.Start();
 
                 if (Settings.userSettings.VisualSettings.NoScope)
-                {
-                    if (Local.Scoped) Local.Scoped = false;
-                }
+                    if (Local.Scoped)
+                        Local.Scoped = false;
 
                 if (Settings.userSettings.VisualSettings.NoScope)
                 {
@@ -111,8 +97,6 @@ namespace Darc_Euphoria.Hacks
                     }
                 }
             }
-
         }
-
     }
 }

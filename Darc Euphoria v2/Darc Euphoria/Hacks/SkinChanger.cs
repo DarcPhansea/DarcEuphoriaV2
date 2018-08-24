@@ -1,34 +1,25 @@
 ﻿using Darc_Euphoria.Euphoric;
 using Darc_Euphoria.Euphoric.Config;
 using Darc_Euphoria.Euphoric.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Darc_Euphoria.Hacks
 {
-    class SkinChanger
-    { 
-        public static bool UpdateNeeded = false;
+    internal class SkinChanger
+    {
+        public static bool UpdateNeeded;
+
         public static void Start()
         {
-            if ((WinAPI.GetAsyncKeyState(Settings.userSettings.ForceUpdateKey) & 0x1) > 0)
-            {
-                Local.ForceUpdate();
-            }
+            if ((WinAPI.GetAsyncKeyState(Settings.userSettings.ForceUpdateKey) & 0x1) > 0) Local.ForceUpdate();
 
             if (!Settings.userSkinSettings.Enable) return;
             if (!Local.InGame) return;
 
-            List<BaseWeapon> weapons = Local.WeaponList;
+            var weapons = Local.WeaponList;
 
-            Settings._SkinSettings skinSettings = new Settings._SkinSettings();
+            var skinSettings = new Settings._SkinSettings();
 
-            skinSettings.Name = String.Empty;
+            skinSettings.Name = string.Empty;
             skinSettings.Seed = 0;
             skinSettings.Wear = 0;
             skinSettings.StatTrak = -1;
@@ -39,73 +30,106 @@ namespace Darc_Euphoria.Hacks
                 switch (weapon.WeaponID)
                 {
                     case 1:
-                        skinSettings = Settings.userSkinSettings.Deagle; break;
+                        skinSettings = Settings.userSkinSettings.Deagle;
+                        break;
                     case 2:
-                        skinSettings = Settings.userSkinSettings.DuelBerettas; break;
+                        skinSettings = Settings.userSkinSettings.DuelBerettas;
+                        break;
                     case 3:
-                        skinSettings = Settings.userSkinSettings.FiveSeven; break;
+                        skinSettings = Settings.userSkinSettings.FiveSeven;
+                        break;
                     case 4:
-                        skinSettings = Settings.userSkinSettings.Glock18; break;
+                        skinSettings = Settings.userSkinSettings.Glock18;
+                        break;
                     case 7:
-                        skinSettings = Settings.userSkinSettings.AK47; break;
+                        skinSettings = Settings.userSkinSettings.AK47;
+                        break;
                     case 8:
-                        skinSettings = Settings.userSkinSettings.Aug; break;
+                        skinSettings = Settings.userSkinSettings.Aug;
+                        break;
                     case 9:
-                        skinSettings = Settings.userSkinSettings.Awp; break;
+                        skinSettings = Settings.userSkinSettings.Awp;
+                        break;
                     case 10:
-                        skinSettings = Settings.userSkinSettings.Famas; break;
+                        skinSettings = Settings.userSkinSettings.Famas;
+                        break;
                     case 11:
-                        skinSettings = Settings.userSkinSettings.G3sg1; break;
+                        skinSettings = Settings.userSkinSettings.G3sg1;
+                        break;
                     case 13:
-                        skinSettings = Settings.userSkinSettings.Galilar; break;
+                        skinSettings = Settings.userSkinSettings.Galilar;
+                        break;
                     case 14:
-                        skinSettings = Settings.userSkinSettings.M249; break;
+                        skinSettings = Settings.userSkinSettings.M249;
+                        break;
                     case 16:
-                        skinSettings = Settings.userSkinSettings.M4a4; break;
+                        skinSettings = Settings.userSkinSettings.M4a4;
+                        break;
                     case 17:
-                        skinSettings = Settings.userSkinSettings.Mac10; break;
+                        skinSettings = Settings.userSkinSettings.Mac10;
+                        break;
                     case 19:
-                        skinSettings = Settings.userSkinSettings.P90; break;
+                        skinSettings = Settings.userSkinSettings.P90;
+                        break;
                     case 24:
-                        skinSettings = Settings.userSkinSettings.Ump45; break;
+                        skinSettings = Settings.userSkinSettings.Ump45;
+                        break;
                     case 25:
-                        skinSettings = Settings.userSkinSettings.Xm1014; break;
+                        skinSettings = Settings.userSkinSettings.Xm1014;
+                        break;
                     case 26:
-                        skinSettings = Settings.userSkinSettings.PPBizon; break;
+                        skinSettings = Settings.userSkinSettings.PPBizon;
+                        break;
                     case 27:
-                        skinSettings = Settings.userSkinSettings.Mag7; break;
+                        skinSettings = Settings.userSkinSettings.Mag7;
+                        break;
                     case 28:
-                        skinSettings = Settings.userSkinSettings.Negev; break;
+                        skinSettings = Settings.userSkinSettings.Negev;
+                        break;
                     case 29:
-                        skinSettings = Settings.userSkinSettings.SawedOff; break;
+                        skinSettings = Settings.userSkinSettings.SawedOff;
+                        break;
                     case 30:
-                        skinSettings = Settings.userSkinSettings.Tec9; break;
+                        skinSettings = Settings.userSkinSettings.Tec9;
+                        break;
                     case 32:
-                        skinSettings = Settings.userSkinSettings.P2000; break;
+                        skinSettings = Settings.userSkinSettings.P2000;
+                        break;
                     case 33:
-                        skinSettings = Settings.userSkinSettings.Mp7; break;
+                        skinSettings = Settings.userSkinSettings.Mp7;
+                        break;
                     case 34:
-                        skinSettings = Settings.userSkinSettings.Mp9; break;
+                        skinSettings = Settings.userSkinSettings.Mp9;
+                        break;
                     case 35:
-                        skinSettings = Settings.userSkinSettings.Nova; break;
+                        skinSettings = Settings.userSkinSettings.Nova;
+                        break;
                     case 36:
-                        skinSettings = Settings.userSkinSettings.P250; break;
+                        skinSettings = Settings.userSkinSettings.P250;
+                        break;
                     case 38:
-                        skinSettings = Settings.userSkinSettings.Scar20; break;
+                        skinSettings = Settings.userSkinSettings.Scar20;
+                        break;
                     case 39:
-                        skinSettings = Settings.userSkinSettings.Sg553; break;
+                        skinSettings = Settings.userSkinSettings.Sg553;
+                        break;
                     case 40:
-                        skinSettings = Settings.userSkinSettings.Ssg08; break;
+                        skinSettings = Settings.userSkinSettings.Ssg08;
+                        break;
                     case 60:
-                        skinSettings = Settings.userSkinSettings.M4a1s; break;
+                        skinSettings = Settings.userSkinSettings.M4a1s;
+                        break;
                     case 61:
-                        skinSettings = Settings.userSkinSettings.USPS; break;
+                        skinSettings = Settings.userSkinSettings.USPS;
+                        break;
                     case 63:
-                        skinSettings = Settings.userSkinSettings.Cz75a; break;
+                        skinSettings = Settings.userSkinSettings.Cz75a;
+                        break;
                     case 64:
-                        skinSettings = Settings.userSkinSettings.R8Revolver; break;
+                        skinSettings = Settings.userSkinSettings.R8Revolver;
+                        break;
                     default:
-                        skinSettings.Name = String.Empty;
+                        skinSettings.Name = string.Empty;
                         skinSettings.Seed = 0;
                         skinSettings.Wear = 0;
                         skinSettings.StatTrak = -1;
@@ -113,7 +137,8 @@ namespace Darc_Euphoria.Hacks
                         break;
                 }
 
-                if (weapon.PaintKit != skinSettings.SkinID && skinSettings.SkinID != 1337 && Settings.userSkinSettings.Enable)
+                if (weapon.PaintKit != skinSettings.SkinID && skinSettings.SkinID != 1337 &&
+                    Settings.userSkinSettings.Enable)
                 {
                     do
                     {
@@ -137,6 +162,5 @@ namespace Darc_Euphoria.Hacks
                 Local.ForceUpdate();
             }
         }
-
     }
 }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Darc_Euphoria.Euphoric.BspParsing
+﻿namespace Darc_Euphoria.Euphoric.BspParsing
 {
-    enum eLumpIndex : uint
+    internal enum eLumpIndex : uint
     {
         LUMP_ENTITIES = 0,
         LUMP_PLANES = 1,
@@ -70,5 +64,5 @@ namespace Darc_Euphoria.Euphoric.BspParsing
         LUMP_OVERLAY_SYSTEM_LEVELS = 61,
         LUMP_PHYSLEVEL = 62,
         LUMP_DISP_MULTIBLEND = 63
-    };
+    }
 }

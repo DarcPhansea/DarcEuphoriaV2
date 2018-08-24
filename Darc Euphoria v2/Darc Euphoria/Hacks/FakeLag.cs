@@ -1,31 +1,20 @@
-﻿using Darc_Euphoria.Euphoric;
+﻿using System;
+using System.Threading;
+using Darc_Euphoria.Euphoric;
 using Darc_Euphoria.Euphoric.Config;
 using Darc_Euphoria.Euphoric.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Darc_Euphoria.Hacks
 {
-    class FakeLag
+    internal class FakeLag
     {
-        private static int _lastLag = 0;
-        private static bool once = false;
+        private static int _lastLag;
+        private static bool once;
+
         public static void Start()
         {
-            gvar.SHUTDOWN++;
-            while (true)
+            while (!gvar.isShuttingDown)
             {
-                if (gvar.isShuttingDown)
-                {
-                    gvar.SHUTDOWN--;
-                    Local.SendPackets = true;
-                    break;
-                }
-
                 Thread.Sleep(1);
 
                 Bunnyhop.Start();
@@ -48,10 +37,8 @@ namespace Darc_Euphoria.Hacks
 
                     continue;
                 }
-                else
-                {
-                    once = true;
-                }
+
+                once = true;
 
                 if ((WinAPI.GetAsyncKeyState(0x1) & 0x8000) > 0 || WinAPI.GetAsyncKeyState(0x1) > 0)
                 {
@@ -66,13 +53,17 @@ namespace Darc_Euphoria.Hacks
                     Local.SendPackets = false;
                     continue;
                 }
-                if (endLag + 20 > Environment.TickCount)
+
+                if (endLag + 15 > Environment.TickCount)
                 {
                     Local.SendPackets = true;
                     continue;
                 }
+
                 _lastLag = Environment.TickCount;
             }
+
+            Local.SendPackets = true;
         }
     }
 }

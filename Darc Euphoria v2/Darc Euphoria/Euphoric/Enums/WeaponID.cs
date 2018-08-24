@@ -1,0 +1,40 @@
+﻿namespace Darc_Euphoria.Euphoric.Enums
+{
+    public enum WEAPONID
+    {
+        Deagle = 1,
+        DuelBerettas = 2,
+        FiveSeven = 3,
+        Glock18 = 4,
+        AK47 = 7,
+        AUG = 8,
+        AWP = 9,
+        FAMAS = 10,
+        G3SG1 = 11,
+        GalilAR = 13,
+        M249 = 14,
+        M4A4 = 16,
+        Mac10 = 17,
+        P90 = 19,
+        MP5SD = 23,
+        UMP45 = 24,
+        XM1014 = 25,
+        PPBizon = 26,
+        Mag7 = 27,
+        Negev = 28,
+        SawedOff = 29,
+        Tec9 = 30,
+        p2000 = 32,
+        MP7 = 33,
+        MP9 = 34,
+        Nova = 35,
+        p250 = 36,
+        Scar20 = 38,
+        SG556 = 39,
+        SSG08 = 40,
+        M4A1S = 60,
+        USPS = 61,
+        CZ75A = 63,
+        R8Revolver = 64
+    }
+}

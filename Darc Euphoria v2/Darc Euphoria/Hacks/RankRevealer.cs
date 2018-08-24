@@ -1,24 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using Darc_Euphoria.Euphoric;
 using Darc_Euphoria.Euphoric.Config;
-using Darc_Euphoria.Euphoric.Objects;
 using Darc_Euphoria.Hacks.Injection;
 
 namespace Darc_Euphoria.Hacks
 {
-    class Rank
+    internal class Rank
     {
+        private static bool once;
+
         public static void Start()
         {
             if (!Settings.userSettings.MiscSettings.RankRevealer) return;
-            if ((WinAPI.GetAsyncKeyState(0x9) & 0x8000) <= 0) return;
+            if ((WinAPI.GetAsyncKeyState(0x9) & 0x8000) <= 0)
+            {
+                if (!gvar.isPanorama)
+                    once = false;
 
-            RankRevealer.Show();
+                return;
+            }
+
+            if (!once)
+            {
+                RankRevealer.Show();
+                once = true;
+            }
+
             Thread.Sleep(200);
         }
     }

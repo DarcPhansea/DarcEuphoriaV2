@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace Darc_Euphoria.Euphoric.BspParsing
 {
@@ -27,6 +22,7 @@ namespace Darc_Euphoria.Euphoric.BspParsing
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public int[] m_LightmapTextureMinsInLuxels;
+
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public int[] m_LightmapTextureSizeInLuxels;
 

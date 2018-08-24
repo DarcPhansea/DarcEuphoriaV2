@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using static Darc_Euphoria.Euphoric.Structs;
+﻿using System.Runtime.InteropServices;
+using Darc_Euphoria.Euphoric.Structs;
 
 namespace Darc_Euphoria.Euphoric.BspParsing
 {
@@ -15,7 +10,8 @@ namespace Darc_Euphoria.Euphoric.BspParsing
         public float m_Distance;
         public byte m_Type;
         public byte m_SignBits;
+
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
-        private byte[] m_Pad;
+        private readonly byte[] m_Pad;
     }
 }

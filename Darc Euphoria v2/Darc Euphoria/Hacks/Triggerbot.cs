@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
+﻿using System.Threading;
 using Darc_Euphoria.Euphoric;
 using Darc_Euphoria.Euphoric.Config;
 using Darc_Euphoria.Euphoric.Objects;
-using static Darc_Euphoria.Euphoric.Structs;
-using System.Windows.Forms;
 
 namespace Darc_Euphoria.Hacks
 {
-    class Triggerbot
+    internal class Triggerbot
     {
         private static Settings.UserSettings.Triggerbot.TSettings TriggerbotSettings;
 
@@ -40,8 +33,6 @@ namespace Darc_Euphoria.Hacks
             if (Settings.userSettings.TriggerbotSettings.Knifebot && Local.ActiveWeapon.isKnife())
             {
                 if (CanKnife()) Local.Attack2();
-
-                return;
             }
             else
             {
@@ -53,7 +44,7 @@ namespace Darc_Euphoria.Hacks
 
                 if (!TriggerbotSettings.Enabled) return;
 
-                Entity target = new Entity(Local.CrosshairID);
+                var target = new Entity(Local.CrosshairID);
 
                 if (target.Dormant) return;
 
@@ -83,7 +74,7 @@ namespace Darc_Euphoria.Hacks
 
         public static bool CanKnife()
         {
-            foreach(Entity player in EntityList.List)
+            foreach (var player in EntityList.List)
             {
                 if (player.Dormant) continue;
                 if (player.Health <= 0) continue;
@@ -91,9 +82,9 @@ namespace Darc_Euphoria.Hacks
 
                 if (80 < MathFuncs.VectorDistance(Local.Position, player.Position)) continue;
 
-                Vector2 newAimAngle = MathFuncs.CalcAngle(Local.EyeLevel, player.BonePosition(4));
+                var newAimAngle = MathFuncs.CalcAngle(Local.EyeLevel, player.BonePosition(4));
 
-                double Fov = MathFuncs.CalcFov(Local.ViewAngle, newAimAngle);
+                var Fov = MathFuncs.CalcFov(Local.ViewAngle, newAimAngle);
 
                 if (Fov > 70)
                     Fov = MathFuncs.CalcFov(Local.ViewAngle.NormalizeAngle(), newAimAngle.NormalizeAngle());
@@ -102,6 +93,7 @@ namespace Darc_Euphoria.Hacks
 
                 return true;
             }
+
             return false;
         }
     }

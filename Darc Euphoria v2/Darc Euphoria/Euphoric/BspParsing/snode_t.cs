@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace Darc_Euphoria.Euphoric.BspParsing
 {
@@ -21,6 +16,7 @@ namespace Darc_Euphoria.Euphoric.BspParsing
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public short[] m_Mins;
+
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public short[] m_Maxs;
 
@@ -29,7 +25,7 @@ namespace Darc_Euphoria.Euphoric.BspParsing
         public short m_Area;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
-        private byte[] m_Pad;
+        private readonly byte[] m_Pad;
 
         public snode_t(int a)
         {

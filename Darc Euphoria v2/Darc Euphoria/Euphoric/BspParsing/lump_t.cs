@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace Darc_Euphoria.Euphoric.BspParsing
 {
@@ -12,7 +7,9 @@ namespace Darc_Euphoria.Euphoric.BspParsing
     {
         public int m_Fileofs;
         public int m_Filelen;
+
         public int m_Version;
+
         //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
         //public string m_FourCC;
         public int m_FourCC;

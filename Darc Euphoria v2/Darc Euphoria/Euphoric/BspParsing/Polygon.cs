@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using static Darc_Euphoria.Euphoric.Structs;
+﻿using System.Runtime.InteropServices;
+using Darc_Euphoria.Euphoric.Structs;
 
 namespace Darc_Euphoria.Euphoric.BspParsing
 {
@@ -19,6 +14,7 @@ namespace Darc_Euphoria.Euphoric.BspParsing
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = BSPFlags.MAX_SURFINFO_VERTS)]
         public VPlane[] m_EdgePlanes;
+
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = BSPFlags.MAX_SURFINFO_VERTS)]
         public Vector3[] m_Vec2D;
 

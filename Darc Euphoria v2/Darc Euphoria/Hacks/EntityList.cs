@@ -1,17 +1,12 @@
-﻿using Darc_Euphoria.Euphoric;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using Darc_Euphoria.Euphoric;
+using Darc_Euphoria.Euphoric.BspParsing;
 using Darc_Euphoria.Euphoric.Config;
 using Darc_Euphoria.Euphoric.Objects;
 using Darc_Euphoria.Hacks.Injection;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static Darc_Euphoria.Euphoric.Structs;
 
 namespace Darc_Euphoria.Hacks
 {
@@ -20,20 +15,14 @@ namespace Darc_Euphoria.Hacks
         public static Entity player;
         public static Entity[] List;
         public static ItemObjects[] ItemList;
-        public static bool thirdperson = false;
+        public static bool thirdperson;
 
-        static Process[] proc = null;
+        private static Process[] proc;
+
         public static void Start()
         {
-            gvar.SHUTDOWN++;
-            while (true)
+            while (!gvar.isShuttingDown)
             {
-                if (gvar.isShuttingDown)
-                {
-                    gvar.SHUTDOWN--;
-                    break;
-                }
-
                 Thread.Sleep(10);
 
                 proc = Process.GetProcessesByName("csgo");
@@ -49,9 +38,7 @@ namespace Darc_Euphoria.Hacks
                 if (Settings.userSettings.MiscSettings._3rdPerson)
                 {
                     if ((WinAPI.GetAsyncKeyState(Settings.userSettings.MiscSettings._3rdPersonKey) & 0x1) > 0)
-                    {
                         thirdperson = !thirdperson;
-                    }
                     Local.ThirdPerson = thirdperson;
                 }
                 else
@@ -61,19 +48,17 @@ namespace Darc_Euphoria.Hacks
                     Thread.Sleep(1000);
                 }
 
-                
+
                 #region LoadMap
-                string MapPath = string.Format(@"{0}\csgo\maps\{1}.bsp", 
-                    Memory.process.Modules[0].FileName.Substring(0, Memory.process.Modules[0].FileName.Length - 9), Local.MapName);
+
+                var MapPath = string.Format(@"{0}\csgo\maps\{1}.bsp",
+                    Memory.process.Modules[0].FileName.Substring(0, Memory.process.Modules[0].FileName.Length - 9),
+                    Local.MapName);
 
                 if (Local.bspMap == null)
-                {
                     LoadMap(MapPath);
-                }
-                else if (Local.bspMap.FileName != MapPath)
-                {
-                    LoadMap(MapPath);
-                }
+                else if (Local.bspMap.FileName != MapPath) LoadMap(MapPath);
+
                 #endregion
             }
         }
@@ -82,10 +67,9 @@ namespace Darc_Euphoria.Hacks
         {
             if (File.Exists(MapPath) && Local.ActiveWeapon.WeaponID != -1)
             {
-                Local.bspMap = new Euphoric.BspParsing.BSPFile(MapPath);
-                ClientCMD.Exec(String.Format("clear; echo Map File {0} Loaded!", Local.MapName));
+                Local.bspMap = new BSPFile(MapPath);
+                ClientCMD.Exec(string.Format("clear; echo Map File {0} Loaded!", Local.MapName));
             }
         }
-
     }
 }

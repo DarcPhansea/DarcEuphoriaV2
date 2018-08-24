@@ -1,24 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static Darc_Euphoria.Euphoric.Structs;
+using Darc_Euphoria.Euphoric.Structs;
 
 namespace Darc_Euphoria.Euphoric.Objects
 {
-    
     public class ItemObjects : IDisposable
     {
-        public void Dispose()
-        {
-
-        }
-
         private static ItemObjects[] _GetItem;
 
-        private static int rGetItem = 0;
+        private static int rGetItem;
+
+        private static int _Ptr;
+        private static readonly int rPtr = 0;
+
+        private static int _GlowIndex;
+        private static readonly int rGlowIndex = 0;
+
+        private static int _Classid;
+        private static readonly int rClassid = 0;
+
+        private static Vector3 _Position;
+        private static readonly int rPosition = 0;
+
+        private static bool _Dormant;
+        private static readonly int rDormant = 0;
+
+        public int Index;
+
+        public ItemObjects(int index)
+        {
+            Index = index;
+        }
+
         public static ItemObjects[] ItemList
         {
             get
@@ -26,11 +39,11 @@ namespace Darc_Euphoria.Euphoric.Objects
                 if (rGetItem < gvar.RefreshID + 5000)
                 {
                     rGetItem = gvar.RefreshID;
-                    List<ItemObjects> returnArray = new List<ItemObjects>();
+                    var returnArray = new List<ItemObjects>();
 
-                    for (int i = 65; i < Local.EntityListLength; i++)
+                    for (var i = 65; i < Local.EntityListLength; i++)
                     {
-                        ItemObjects item = new ItemObjects(i);
+                        var item = new ItemObjects(i);
 
                         if (item.Ptr == 0) continue;
                         if (item.ClassName == "-1") continue;
@@ -41,28 +54,22 @@ namespace Darc_Euphoria.Euphoric.Objects
 
                     _GetItem = returnArray.ToArray();
                 }
-                
+
                 return _GetItem;
             }
         }
 
-        public int Index;
-
-        private static int _Ptr;
-        private static int rPtr = 0;
         public int Ptr
         {
             get
             {
                 if (rPtr.Upd())
-                    _Ptr = Memory.Read<int>(Memory.client + Offsets.dwEntityList + Index * 0x10);
+                    _Ptr = Memory.Read<int>(Memory.Client + Offsets.dwEntityList + Index * 0x10);
 
                 return _Ptr;
             }
         }
 
-        private static int _GlowIndex;
-        private static int rGlowIndex = 0;
         public int GlowIndex
         {
             get
@@ -74,8 +81,6 @@ namespace Darc_Euphoria.Euphoric.Objects
             }
         }
 
-        private static int _Classid;
-        private static int rClassid = 0;
         public int ClassID
         {
             get
@@ -87,12 +92,11 @@ namespace Darc_Euphoria.Euphoric.Objects
                     var cls = Memory.Read<int>(fn + 0x1);
                     _Classid = Memory.Read<int>(cls + 0x14);
                 }
+
                 return _Classid;
             }
         }
 
-        private static Vector3 _Position;
-        private static int rPosition = 0;
         public Vector3 Position
         {
             get
@@ -104,8 +108,6 @@ namespace Darc_Euphoria.Euphoric.Objects
             }
         }
 
-        private static bool _Dormant;
-        private static int rDormant = 0;
         public bool Dormant
         {
             get
@@ -120,29 +122,6 @@ namespace Darc_Euphoria.Euphoric.Objects
         public bool HasOwner => Position.Equals(new Vector3());
 
         public short WeaponID => Memory.Read<short>(Ptr + Netvars.m_iItemDefinitionIndex);
-
-        public bool isKnife()
-        {
-            switch (WeaponID)
-            {
-                case 41:
-                case 42:
-                case 59:
-                case 500:
-                case 505:
-                case 506:
-                case 507:
-                case 508:
-                case 509:
-                case 512:
-                case 514:
-                case 515:
-                case 516:
-                    return true;
-                default:
-                    return false;
-            }
-        }
 
         public string WeaponName
         {
@@ -166,6 +145,7 @@ namespace Darc_Euphoria.Euphoric.Objects
                     case 16: return "M4A4";
                     case 17: return "MAC-10";
                     case 19: return "P90";
+                    case 23: return "MP5-SD";
                     case 24: return "UMP-45";
                     case 25: return "XM1014";
                     case 26: return "PP-Bizon";
@@ -195,7 +175,6 @@ namespace Darc_Euphoria.Euphoric.Objects
                     case 64: return "R8 Revolver";
                     default: return "-1";
                 }
-
             }
         }
 
@@ -250,7 +229,6 @@ namespace Darc_Euphoria.Euphoric.Objects
                     case 64: return "\uE040";
                     default: return WeaponID.ToString();
                 }
-
             }
         }
 
@@ -267,31 +245,31 @@ namespace Darc_Euphoria.Euphoric.Objects
                     case 3:
                     case 4:
                     case 7:
-                    case 8: 
+                    case 8:
                     case 9:
-                    case 10: 
+                    case 10:
                     case 11:
-                    case 13: 
-                    case 14: 
-                    case 16: 
-                    case 17: 
-                    case 19: 
-                    case 24: 
+                    case 13:
+                    case 14:
+                    case 16:
+                    case 17:
+                    case 19:
+                    case 24:
                     case 25:
-                    case 26: 
+                    case 26:
                     case 27:
-                    case 28: 
+                    case 28:
                     case 29:
                     case 30:
-                    case 31: 
-                    case 32: 
-                    case 33: 
-                    case 34: 
-                    case 35: 
+                    case 31:
+                    case 32:
+                    case 33:
+                    case 34:
+                    case 35:
                     case 36:
                     case 38:
                     case 39:
-                    case 40: 
+                    case 40:
                     case 49:
                     case 69:
                     case 61:
@@ -379,8 +357,6 @@ namespace Darc_Euphoria.Euphoric.Objects
                         return "SSG 08";
                     case 216:
                         return "Galil-AR";
-
-
                     case 84:
                         return "HE Grenade";
                     case 9:
@@ -409,9 +385,31 @@ namespace Darc_Euphoria.Euphoric.Objects
             }
         }
 
-        public ItemObjects(int index)
+        public void Dispose()
         {
-            Index = index;
+        }
+
+        public bool isKnife()
+        {
+            switch (WeaponID)
+            {
+                case 41:
+                case 42:
+                case 59:
+                case 500:
+                case 505:
+                case 506:
+                case 507:
+                case 508:
+                case 509:
+                case 512:
+                case 514:
+                case 515:
+                case 516:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

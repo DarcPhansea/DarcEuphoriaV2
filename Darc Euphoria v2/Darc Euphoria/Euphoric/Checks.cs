@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Darc_Euphoria.Euphoric
+﻿namespace Darc_Euphoria.Euphoric
 {
     public static class Checks
     {
@@ -15,6 +9,7 @@ namespace Darc_Euphoria.Euphoric
                 value = gvar.RefreshID;
                 return true;
             }
+
             return false;
         }
     }

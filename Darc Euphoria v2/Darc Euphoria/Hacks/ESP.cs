@@ -1,26 +1,43 @@
-﻿using Darc_Euphoria.Euphoric;
+﻿using System.Drawing;
+using System.Windows.Forms;
+using Darc_Euphoria.Euphoric;
 using Darc_Euphoria.Euphoric.Config;
 using Darc_Euphoria.Euphoric.Objects;
+using Darc_Euphoria.Euphoric.Structs;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static Darc_Euphoria.Euphoric.Structs;
+using Factory = SharpDX.DirectWrite.Factory;
+using FontStyle = SharpDX.DirectWrite.FontStyle;
 
 namespace Darc_Euphoria.Hacks
 {
-    class ESP
+    internal class ESP
     {
-        public static Matrix4x4 matrix;
         public static Settings.UserSettings.Visuals visuals = Settings.userSettings.VisualSettings;
         public static Settings.UserSettings.VisColors visColors = Settings.userSettings.VisualColors;
         public static string spectatorString;
+
+        public static TextFormat txtForm = new TextFormat(new Factory(),
+            "Calibri", FontWeight.Black, FontStyle.Normal, 10);
+
+        public static TextFormat txtForm2 = new TextFormat(new Factory(),
+            "Calibri", FontWeight.Black, FontStyle.Normal, 20);
+
+
+        private static Matrix4x4 _matrix4;
+        private static int rMatrix = 0;
+        public static Matrix4x4 matrix
+        {
+            get
+            {
+                if (rMatrix.Upd())
+                    _matrix4 = Memory.Read<Matrix4x4>(Memory.Client + Offsets.dwViewMatrix);
+
+                return _matrix4;
+            }
+        }
+
 
         public static void Start(RenderTarget Device)
         {
@@ -32,13 +49,9 @@ namespace Darc_Euphoria.Hacks
             EntityList.ItemList = ItemObjects.ItemList;
 
             if (!visuals.Enabled)
-            {
-                if(!Settings.userSettings.MiscSettings.C4Countdown)
-                {
-                    if (!Settings.userSettings.MiscSettings.Spectators) return;
-                }
-            }
-            matrix = Memory.Read<Matrix4x4>(Memory.client + Offsets.dwViewMatrix);
+                if (!Settings.userSettings.MiscSettings.C4Countdown)
+                    if (!Settings.userSettings.MiscSettings.Spectators)
+                        return;
 
             Players(Device);
             Items(Device);
@@ -46,40 +59,38 @@ namespace Darc_Euphoria.Hacks
 
         public static void Players(RenderTarget Device)
         {
-            foreach(Entity player in EntityList.List)
+            foreach (var player in EntityList.List)
             {
                 if (Settings.userSettings.MiscSettings.Spectators && Local.Health > 0)
                 {
-                    foreach (Entity spec in EntityList.List)
-                    {
+                    foreach (var spec in EntityList.List)
                         if (player.Observe == spec.Ptr)
                             spectatorString += player.Name + " -> " + spec.Name + "\n";
                         else if (player.Observe == Local.Ptr)
                             spectatorString += player.Name + " -> " + spec.Name + "<<\n";
-                    }
                     Spectators(Device);
                 }
 
                 if (!visuals.Enabled) continue;
 
-                if (player.Health <= 0 ) continue;
+                if (player.Health <= 0) continue;
                 if (player.Dormant) continue;
                 if (player.isTeam && !visuals.DisplayTeam) continue;
 
-                Vector2 screenPos = player.Position.ToScreen();
+                var screenPos = player.Position.ToScreen();
                 if (screenPos.x == -1f && screenPos.y == -1f) continue;
 
-                Vector2 headPos = player.BonePosition(8).ToScreen();
+                var headPos = player.BonePosition(8).ToScreen();
                 if (headPos.x == -1f && headPos.y == -1f) continue;
 
                 if (visuals.Snaplines)
                     Snaplines(Device, player);
 
-                DrawArea drawArea = new DrawArea();
-                drawArea.height = (int)(screenPos.y - headPos.y);
-                drawArea.width = (int)(drawArea.height / 2.1f);
-                drawArea.x = (int)((screenPos.x + headPos.x)/2f - drawArea.width / 2f);
-                drawArea.y = (int)(headPos.y - drawArea.height / 10f);
+                var drawArea = new DrawArea();
+                drawArea.height = (int) (screenPos.y - headPos.y);
+                drawArea.width = (int) (drawArea.height / 2.1f);
+                drawArea.x = (int) ((screenPos.x + headPos.x) / 2f - drawArea.width / 2f);
+                drawArea.y = (int) (headPos.y - drawArea.height / 10f);
                 drawArea.height *= 1.1f;
 
                 if (drawArea.x + drawArea.width + 20 < 0)
@@ -95,22 +106,12 @@ namespace Darc_Euphoria.Hacks
                     continue;
 
                 if (visuals.BoxEsp == Settings.BoxDisplay._3D)
-                {
                     if (drawArea.x + drawArea.width >= 0)
-                    {
                         if (drawArea.y + drawArea.height >= 0)
-                        {
                             if (drawArea.x <= gvar.OverlaySize.Width)
-                            {
                                 if (drawArea.y <= gvar.OverlaySize.Height)
-                                {
                                     Boxes3D(Device, player);
-                                }
-                            }
-                        }
-                    }
-                }
-                    
+
                 if (visuals.BoxEsp == Settings.BoxDisplay._2D)
                     Boxes2D(Device, drawArea, player);
 
@@ -134,29 +135,23 @@ namespace Darc_Euphoria.Hacks
             }
         }
 
-        public static TextFormat txtForm = new TextFormat(new SharpDX.DirectWrite.Factory(),
-                           "Calibri", FontWeight.Bold, SharpDX.DirectWrite.FontStyle.Normal, 10);
-
-        public static TextFormat txtForm2 = new TextFormat(new SharpDX.DirectWrite.Factory(),
-                           "Calibri", FontWeight.Bold, SharpDX.DirectWrite.FontStyle.Normal, 20);
-
         public static void Items(RenderTarget Device)
         {
             txtForm.SetWordWrapping(WordWrapping.NoWrap);
             txtForm.SetTextAlignment(TextAlignment.Center);
 
-            foreach (ItemObjects item in EntityList.ItemList)
+            foreach (var item in EntityList.ItemList)
             {
                 if (item.ClassName == "Planted C4" && Settings.userSettings.MiscSettings.C4Countdown)
                 {
                     txtForm2.SetWordWrapping(WordWrapping.NoWrap);
                     txtForm2.SetTextAlignment(TextAlignment.Center);
-                    
-                    float c4Blow = Memory.Read<float>(item.Ptr + Netvars.m_flC4Blow);
-                    float TimeLeft = c4Blow - gvar.GlobalVarsBase.curtime;
+
+                    var c4Blow = Memory.Read<float>(item.Ptr + Netvars.m_flC4Blow);
+                    var TimeLeft = c4Blow - gvar.GlobalVarsBase.curtime;
                     if (TimeLeft < 0) TimeLeft = 0;
-                    RawRectangleF rect = new RawRectangleF(0, 45, gvar.OverlaySize.Width, 57);
-                    SolidColorBrush brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4());
+                    var rect = new RawRectangleF(0, 45, gvar.OverlaySize.Width, 57);
+                    var brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4());
 
                     Device.DrawText(TimeLeft.ToString("0.00"), txtForm2, rect, brush);
                     brush = new SolidColorBrush(Device, TimeLeft.BombToColor().toRawColor4());
@@ -167,19 +162,18 @@ namespace Darc_Euphoria.Hacks
                 if (item.Dormant) continue;
                 if (item.HasOwner) continue;
                 if (item.ClassName == "-1") continue;
-                
-                using (SolidColorBrush brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
+
+                using (var brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
                 {
                     if (visuals.ItemEsp || visuals.GrenadesEsp)
-                    {
                         if (item.WeaponName != "-1")
                         {
-                            RawRectangleF rect = new RawRectangleF()
+                            var rect = new RawRectangleF
                             {
                                 Top = item.Position.ToScreen().y - 10,
                                 Bottom = item.Position.ToScreen().y,
                                 Left = item.Position.ToScreen().x - 10,
-                                Right = item.Position.ToScreen().x + 10,
+                                Right = item.Position.ToScreen().x + 10
                             };
 
                             if (item.isWeapon && !visuals.ItemEsp) continue;
@@ -193,10 +187,11 @@ namespace Darc_Euphoria.Hacks
 
                             brush.Color = visColors.World_Text.toRawColor4();
 
-                            Device.DrawText(item.WeaponName, txtForm, rect, brush, DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping | DrawTextOptions.NoSnap);
+                            Device.DrawText(item.WeaponName, txtForm, rect, brush,
+                                DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping |
+                                DrawTextOptions.NoSnap);
                             continue;
                         }
-                    }
 
                     if (item.WeaponName != "-1") continue;
 
@@ -210,25 +205,29 @@ namespace Darc_Euphoria.Hacks
                     if (item.ClassName == "Flashbang" && !visuals.GrenadesEsp) continue;
                     if (item.ClassName == "HE Grenade" && !visuals.GrenadesEsp) continue;
 
-                    RawRectangleF rect2 = new RawRectangleF()
+                    var rect2 = new RawRectangleF
                     {
                         Top = item.Position.ToScreen().y - 10,
                         Bottom = item.Position.ToScreen().y,
                         Left = item.Position.ToScreen().x - 10,
-                        Right = item.Position.ToScreen().x + 10,
+                        Right = item.Position.ToScreen().x + 10
                     };
 
                     brush.Color = Color.FromArgb(1, 1, 1).toRawColor4();
                     Device.DrawText(item.ClassName, txtForm, rect2, brush, DrawTextOptions.NoSnap);
                     brush.Color = visColors.World_Text.toRawColor4();
-                    Device.DrawText(item.ClassName, txtForm, rect2, brush, DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping | DrawTextOptions.NoSnap);
-                };
+                    Device.DrawText(item.ClassName, txtForm, rect2, brush,
+                        DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping |
+                        DrawTextOptions.NoSnap);
+                }
+
+                ;
             }
         }
-        
+
         public static void Boxes2D(RenderTarget Device, DrawArea drawArea, Entity player)
         {
-            Color col = Color.Empty;
+            var col = Color.Empty;
             if (player.Visible && player.isTeam) col = visColors.Team_Box_Visible;
             else if (!player.Visible && player.isTeam) col = visColors.Team_Box_Hidden;
             else if (player.Visible && !player.isTeam) col = visColors.Enemy_Box_Visible;
@@ -241,36 +240,33 @@ namespace Darc_Euphoria.Hacks
             var p4 = new RawVector2(p2.X, p3.Y);
 
             if (visuals.BoxOutline)
-            {
-                using (SolidColorBrush brush = new SolidColorBrush(Device, Color.FromArgb(1,1,1).toRawColor4()))
+                using (var brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4()))
                 {
                     Device.DrawLine(p1, p2, brush, 3);
                     Device.DrawLine(p2, p4, brush, 3);
                     Device.DrawLine(p4, p3, brush, 3);
                     Device.DrawLine(p3, p1, brush, 3);
                 }
-            }
 
-            using (SolidColorBrush brush = new SolidColorBrush(Device, col.toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, col.toRawColor4()))
             {
                 Device.DrawLine(p1, p2, brush, 1);
                 Device.DrawLine(p2, p4, brush, 1);
                 Device.DrawLine(p4, p3, brush, 1);
                 Device.DrawLine(p3, p1, brush, 1);
             }
-            
         }
 
         public static void BoxesEdges(RenderTarget Device, DrawArea drawArea, Entity player)
         {
-            Color col = Color.Empty;
+            var col = Color.Empty;
             if (player.Visible && player.isTeam) col = visColors.Team_Box_Visible;
             else if (!player.Visible && player.isTeam) col = visColors.Team_Box_Hidden;
             else if (player.Visible && !player.isTeam) col = visColors.Enemy_Box_Visible;
             else if (!player.Visible && !player.isTeam) col = visColors.Enemy_Box_Hidden;
 
 
-            var len = (int)(drawArea.width / 3.5);
+            var len = (int) (drawArea.width / 3.5);
             var p1 = new RawVector2(drawArea.x, drawArea.y);
             var p2 = new RawVector2(drawArea.x + drawArea.width, drawArea.y);
             var p3 = new RawVector2(drawArea.x, drawArea.y + drawArea.height);
@@ -286,8 +282,7 @@ namespace Darc_Euphoria.Hacks
 
 
             if (visuals.BoxOutline)
-            {
-                using (SolidColorBrush brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4()))
+                using (var brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4()))
                 {
                     Device.DrawLine(p11, p1, brush, 3);
                     Device.DrawLine(p1, p12, brush, 3);
@@ -298,9 +293,8 @@ namespace Darc_Euphoria.Hacks
                     Device.DrawLine(p41, p4, brush, 3);
                     Device.DrawLine(p4, p42, brush, 3);
                 }
-            }
 
-            using (SolidColorBrush brush = new SolidColorBrush(Device, col.toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, col.toRawColor4()))
             {
                 Device.DrawLine(p11, p1, brush, 1);
                 Device.DrawLine(p1, p12, brush, 1);
@@ -311,18 +305,17 @@ namespace Darc_Euphoria.Hacks
                 Device.DrawLine(p41, p4, brush, 1);
                 Device.DrawLine(p4, p42, brush, 1);
             }
-
         }
 
         public static void Boxes3D(RenderTarget Device, Entity player)
         {
-            Color col = Color.Empty;
+            var col = Color.Empty;
             if (player.Visible && player.isTeam) col = visColors.Team_Box_Visible;
             else if (!player.Visible && player.isTeam) col = visColors.Team_Box_Hidden;
             else if (player.Visible && !player.isTeam) col = visColors.Enemy_Box_Visible;
             else if (!player.Visible && !player.isTeam) col = visColors.Enemy_Box_Hidden;
 
-            int size = 15;
+            var size = 15;
 
             var p1 = player.Position;
             var p2 = p1;
@@ -362,8 +355,7 @@ namespace Darc_Euphoria.Hacks
             if (p8.ToScreen().x == -1f && p8.ToScreen().y == -1f) return;
 
             if (visuals.BoxOutline)
-            {
-                using (SolidColorBrush brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4()))
+                using (var brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4()))
                 {
                     Device.DrawLine(p7.ToScreen().ToVector(), p8.ToScreen().ToVector(), brush, 3);
                     Device.DrawLine(p4.ToScreen().ToVector(), p8.ToScreen().ToVector(), brush, 3);
@@ -379,9 +371,7 @@ namespace Darc_Euphoria.Hacks
                     Device.DrawLine(p5.ToScreen().ToVector(), p6.ToScreen().ToVector(), brush, 3);
                 }
 
-            }
-
-            using (SolidColorBrush brush = new SolidColorBrush(Device, col.toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, col.toRawColor4()))
             {
                 Device.DrawLine(p7.ToScreen().ToVector(), p8.ToScreen().ToVector(), brush, 1);
                 Device.DrawLine(p4.ToScreen().ToVector(), p8.ToScreen().ToVector(), brush, 1);
@@ -396,19 +386,18 @@ namespace Darc_Euphoria.Hacks
                 Device.DrawLine(p2.ToScreen().ToVector(), p6.ToScreen().ToVector(), brush, 1);
                 Device.DrawLine(p5.ToScreen().ToVector(), p6.ToScreen().ToVector(), brush, 1);
             }
-
         }
 
         public static void HealthBar(RenderTarget Device, DrawArea drawArea, Entity player)
         {
-            using (SolidColorBrush brush = new SolidColorBrush(Device, Color.FromArgb(1,1,1).toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, Color.FromArgb(1, 1, 1).toRawColor4()))
             {
                 var health = player.Health > 100 ? 100 : player.Health;
 
                 var x = drawArea.x - 5;
                 var y1 = drawArea.y;
                 var y2 = drawArea.y + drawArea.height;
-                var y3 = drawArea.y + 1 + (drawArea.height - (health * (drawArea.height / 100)));
+                var y3 = drawArea.y + 1 + (drawArea.height - health * (drawArea.height / 100));
                 var y4 = y2 - 1;
 
                 if (visuals.HealthPostion == Settings.HealthDisplay.Right)
@@ -424,12 +413,12 @@ namespace Darc_Euphoria.Hacks
 
                     y1 = drawArea.x;
                     y2 = drawArea.x + drawArea.width;
-                    y3 = drawArea.x - 1 + ((health * (drawArea.width / 100)));
+                    y3 = drawArea.x - 1 + health * (drawArea.width / 100);
                     y4 = y1 + 1;
-
                 }
 
-                if (visuals.HealthPostion == Settings.HealthDisplay.Left || visuals.HealthPostion == Settings.HealthDisplay.Right)
+                if (visuals.HealthPostion == Settings.HealthDisplay.Left ||
+                    visuals.HealthPostion == Settings.HealthDisplay.Right)
                 {
                     Device.DrawLine(new RawVector2(x, y1), new RawVector2(x, y2), brush, 3);
                     brush.Color = player.Health.HealthToColor().toRawColor4();
@@ -442,19 +431,21 @@ namespace Darc_Euphoria.Hacks
                     Device.DrawLine(new RawVector2(y3, x), new RawVector2(y4, x), brush, 1);
                 }
 
-                TextFormat txtForm = new TextFormat(new SharpDX.DirectWrite.Factory(),
-                    "Calibri", FontWeight.Bold, SharpDX.DirectWrite.FontStyle.Normal, 10);
+                var txtForm = new TextFormat(new Factory(),
+                    "Calibri", FontWeight.Black, FontStyle.Normal, 10);
 
-                
+
                 if (visuals.HealthNumber)
                 {
                     txtForm.SetWordWrapping(WordWrapping.NoWrap);
-                    RawRectangleF rect = new RawRectangleF(drawArea.x - 30, drawArea.y, drawArea.x, drawArea.y + 10);
+                    var rect = new RawRectangleF(drawArea.x - 30, drawArea.y, drawArea.x, drawArea.y + 10);
 
                     if (player.isTeam) brush.Color = visColors.Team_Text.toRawColor4();
                     else brush.Color = visColors.Enemy_Text.toRawColor4();
 
-                    Device.DrawText(player.Health + "%", txtForm, rect, brush, DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping | DrawTextOptions.NoSnap);
+                    Device.DrawText(player.Health + "%", txtForm, rect, brush,
+                        DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping |
+                        DrawTextOptions.NoSnap);
                 }
             }
         }
@@ -463,30 +454,32 @@ namespace Darc_Euphoria.Hacks
         {
             using (var brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
             {
-                RawVector2 vec1 = new RawVector2(gvar.OverlaySize.Width / 2, gvar.OverlaySize.Height);
-                RawVector2 vec2 = new RawVector2(player.Position.ToScreen().x, player.Position.ToScreen().y);
+                var vec1 = new RawVector2(gvar.OverlaySize.Width / 2, gvar.OverlaySize.Height);
+                var vec2 = new RawVector2(player.Position.ToScreen().x, player.Position.ToScreen().y);
                 if (vec2.X == -1f && vec2.Y == -1f) return;
 
                 if (player.isTeam && player.Visible) brush.Color = visColors.Team_Snaplines_Visible.toRawColor4();
                 else if (player.isTeam && !player.Visible) brush.Color = visColors.Team_Snaplines_Hidden.toRawColor4();
-                else if (!player.isTeam && player.Visible) brush.Color = visColors.Enemy_Snaplines_Visible.toRawColor4();
-                else if (!player.isTeam && !player.Visible) brush.Color = visColors.Enemy_Snaplines_Hidden.toRawColor4();
+                else if (!player.isTeam && player.Visible)
+                    brush.Color = visColors.Enemy_Snaplines_Visible.toRawColor4();
+                else if (!player.isTeam && !player.Visible)
+                    brush.Color = visColors.Enemy_Snaplines_Hidden.toRawColor4();
 
                 Device.DrawLine(vec1, vec2, brush);
             }
         }
-    
+
         public static void Name(RenderTarget Device, DrawArea drawArea, Entity player)
         {
-            using (SolidColorBrush brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
             {
                 txtForm.SetTextAlignment(TextAlignment.Center);
                 txtForm.SetWordWrapping(WordWrapping.NoWrap);
 
-                RawRectangleF rect = new RawRectangleF(
-                    drawArea.x, 
+                var rect = new RawRectangleF(
+                    drawArea.x,
                     !visuals.Rank ? drawArea.y - 15 : drawArea.y - 25,
-                    drawArea.x + drawArea.width, 
+                    drawArea.x + drawArea.width,
                     drawArea.y);
 
                 if (visuals.HealthPostion == Settings.HealthDisplay.Top)
@@ -494,24 +487,28 @@ namespace Darc_Euphoria.Hacks
 
                 brush.Color = Color.FromArgb(1, 1, 1).toRawColor4();
 
-                
+
                 Device.DrawText(player.Name, txtForm, rect, brush, DrawTextOptions.NoSnap);
 
 
                 if (player.isTeam) brush.Color = visColors.Team_Text.toRawColor4();
                 else brush.Color = visColors.Enemy_Text.toRawColor4();
-                Device.DrawText(player.Name, txtForm, rect, brush, DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping | DrawTextOptions.NoSnap);
-            };
+                Device.DrawText(player.Name, txtForm, rect, brush,
+                    DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping |
+                    DrawTextOptions.NoSnap);
+            }
+
+            ;
         }
 
         public static void Rank(RenderTarget Device, DrawArea drawArea, Entity player)
         {
-            using (SolidColorBrush brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
             {
                 txtForm.SetTextAlignment(TextAlignment.Center);
                 txtForm.SetWordWrapping(WordWrapping.NoWrap);
 
-                RawRectangleF rect = new RawRectangleF(
+                var rect = new RawRectangleF(
                     drawArea.x,
                     drawArea.y - 15,
                     drawArea.x + drawArea.width,
@@ -529,43 +526,52 @@ namespace Darc_Euphoria.Hacks
                 if (player.isTeam) brush.Color = visColors.Team_Text.toRawColor4();
                 else brush.Color = visColors.Enemy_Text.toRawColor4();
 
-                Device.DrawText(player.Rank.GetRankName(), txtForm, rect, brush, DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping | DrawTextOptions.NoSnap);
-            };
+                Device.DrawText(player.Rank.GetRankName(), txtForm, rect, brush,
+                    DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping |
+                    DrawTextOptions.NoSnap);
+            }
+
+            ;
         }
 
         public static void ActiveWeapon(RenderTarget Device, DrawArea drawArea, Entity player)
         {
-            using (SolidColorBrush brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
             {
                 txtForm.SetTextAlignment(TextAlignment.Center);
                 txtForm.SetWordWrapping(WordWrapping.NoWrap);
 
-                RawRectangleF rect = new RawRectangleF(
+                var rect = new RawRectangleF(
                     drawArea.x,
                     drawArea.y + drawArea.height,
                     drawArea.x + drawArea.width,
                     drawArea.y + drawArea.height + 30);
 
                 if (visuals.HealthPostion == Settings.HealthDisplay.Bottom)
-                    rect.Top += 5; rect.Bottom += 5;
-                
+                    rect.Top += 5;
+                rect.Bottom += 5;
+
                 if (player.isTeam) brush.Color = visColors.Team_Text.toRawColor4();
                 else brush.Color = visColors.Enemy_Text.toRawColor4();
 
-                Device.DrawText("[" + player.ActiveWeapon.WeaponName + "]", txtForm, rect, brush, DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping | DrawTextOptions.NoSnap);
-            };
+                Device.DrawText("[" + player.ActiveWeapon.WeaponName + "]", txtForm, rect, brush,
+                    DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping |
+                    DrawTextOptions.NoSnap);
+            }
+
+            ;
         }
 
         public static void Spectators(RenderTarget Device)
         {
-            using (SolidColorBrush brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
+            using (var brush = new SolidColorBrush(Device, Color.Empty.toRawColor4()))
             {
                 txtForm.SetTextAlignment(TextAlignment.Trailing);
                 txtForm.SetWordWrapping(WordWrapping.NoWrap);
 
-                RawRectangleF rect = new RawRectangleF(
+                var rect = new RawRectangleF(
                     0,
-                    gvar.OverlaySize.Height/2,
+                    gvar.OverlaySize.Height / 2,
                     gvar.OverlaySize.Width,
                     gvar.OverlaySize.Height / 2
                 );
@@ -576,9 +582,13 @@ namespace Darc_Euphoria.Hacks
                 Device.DrawText(spectatorString, txtForm, rect, brush, DrawTextOptions.NoSnap);
 
                 brush.Color = Color.White.toRawColor4();
-   
-                Device.DrawText(spectatorString, txtForm, rect, brush, DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping | DrawTextOptions.NoSnap);
-            };
+
+                Device.DrawText(spectatorString, txtForm, rect, brush,
+                    DrawTextOptions.EnableColorFont | DrawTextOptions.DisableColorBitmapSnapping |
+                    DrawTextOptions.NoSnap);
+            }
+
+            ;
         }
     }
 }

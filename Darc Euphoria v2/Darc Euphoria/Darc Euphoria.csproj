@@ -101,6 +101,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Euphoric\Allocator.cs" />
     <Compile Include="Euphoric\BspParsing\BSPFile.cs" />
     <Compile Include="Euphoric\BspParsing\BSPFlags.cs" />
     <Compile Include="Euphoric\BspParsing\ContentsFlag.cs" />
@@ -147,7 +148,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Euphoric\Controls\zBitmap.cs" />
-    <Compile Include="Euphoric\Enums.cs" />
+    <Compile Include="Euphoric\Enums\EncodingType.cs" />
+    <Compile Include="Euphoric\Enums\FreeType.cs" />
+    <Compile Include="Euphoric\Enums\ProcessAccessFlags.cs" />
+    <Compile Include="Euphoric\Enums\SkinID.cs" />
+    <Compile Include="Euphoric\Enums\VirtualKeys.cs" />
+    <Compile Include="Euphoric\Enums\WeaponID.cs" />
     <Compile Include="Euphoric\Fonts.cs" />
     <Compile Include="Euphoric\gvar.cs" />
     <Compile Include="Euphoric\MarshalSize.cs" />
@@ -161,8 +167,25 @@
     <Compile Include="Euphoric\Offsets.cs" />
     <Compile Include="Euphoric\Sig.cs" />
     <Compile Include="Euphoric\SizeFormatter.cs" />
-    <Compile Include="Euphoric\Structs.cs" />
+    <Compile Include="Euphoric\Structs\DrawArea.cs" />
+    <Compile Include="Euphoric\Structs\GlobalVarBase.cs" />
+    <Compile Include="Euphoric\Structs\GlowColor.cs" />
+    <Compile Include="Euphoric\Structs\GlowSettings.cs" />
+    <Compile Include="Euphoric\Structs\Margins.cs" />
+    <Compile Include="Euphoric\Structs\Matrix4x4.cs" />
+    <Compile Include="Euphoric\Structs\Rect.cs" />
+    <Compile Include="Euphoric\Structs\RenderColor.cs" />
+    <Compile Include="Euphoric\Structs\Signature.cs" />
+    <Compile Include="Euphoric\Structs\Usercmd.cs" />
+    <Compile Include="Euphoric\Structs\Vector2.cs" />
+    <Compile Include="Euphoric\Structs\Vector3.cs" />
     <Compile Include="Euphoric\WinAPI.cs" />
+    <Compile Include="Forms\wnd_Radar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\wnd_Radar.Designer.cs">
+      <DependentUpon>wnd_Radar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Hacks\Aimbot.cs" />
     <Compile Include="Hacks\Bunnyhop.cs" />
     <Compile Include="Hacks\ChatSpammer.cs" />
@@ -177,6 +200,7 @@
     <Compile Include="Hacks\Injection\SetClanTag.cs" />
     <Compile Include="Hacks\Injection\SetName.cs" />
     <Compile Include="Hacks\Misc.cs" />
+    <Compile Include="Hacks\Nightmode.cs" />
     <Compile Include="Hacks\RankRevealer.cs" />
     <Compile Include="Hacks\SkinChanger.cs" />
     <Compile Include="Hacks\Triggerbot.cs" />
@@ -185,32 +209,35 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="wnd_menu.cs">
+    <Compile Include="Forms\wnd_menu.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wnd_menu.Designer.cs">
+    <Compile Include="Forms\wnd_menu.Designer.cs">
       <DependentUpon>wnd_menu.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="wnd_overlay.cs">
+    <Compile Include="Forms\wnd_overlay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wnd_overlay.Designer.cs">
+    <Compile Include="Forms\wnd_overlay.Designer.cs">
       <DependentUpon>wnd_overlay.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Euphoric\Controls\EuphoricColorPicker.resx">
       <DependentUpon>EuphoricColorPicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wnd_menu.resx">
+    <EmbeddedResource Include="Forms\wnd_menu.resx">
       <DependentUpon>wnd_menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\wnd_Radar.resx">
+      <DependentUpon>wnd_Radar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="wnd_overlay.resx">
+    <EmbeddedResource Include="Forms\wnd_overlay.resx">
       <DependentUpon>wnd_overlay.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
